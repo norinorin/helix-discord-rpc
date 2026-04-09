@@ -15,7 +15,7 @@ forge install
 
 Or you can just install from the git using
 ```
-forge pkg install --git https://github.com/Ciflire/helix-discord-rpc.git
+forge pkg install --git https://github.com/norinorin/helix-discord-rpc.git
 ```
 
 Then you need to add the plugin to your `init.scm`, i recommend that you prefix it.
@@ -34,12 +34,12 @@ To you `init.scm` to set the activity when opening helix though i do not recomme
 
 The idea is to match the features of [vscord](https://github.com/leonardssh/vscord) and to conserve the same configuration structures, options... to ease transitions if that somehow happens and to have some kind of guidelines.If it can be done in scheme it must be !
 
-- [ ] Activity update
-  - [ ] On workspace change
+- [x] Activity update
+  - [x] On workspace change
   - [x] On file change
 - [ ] Language icons : some of them are supported for now, i'm just a bit lazy and don't want to look for all file extensions of all programming language
 - [ ] Idle status
-- [ ] Cursor Position
+- [x] Cursor Position
 - [ ] Git status
 - [ ] LSP workspace/file diagnostics
 - [ ] Configuration ?
@@ -47,4 +47,3 @@ The idea is to match the features of [vscord](https://github.com/leonardssh/vsco
 # Thanks
 
 - Thanks to [vscord](https://github.com/leonardssh/vscord) for there assets
-- Thanks to [presence.nvim](https://github.com/andweeb/presence.nvim) for giving the name to the project (hxcord was kind of a tongue twister)
