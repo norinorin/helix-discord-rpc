@@ -75,6 +75,7 @@ impl DiscordRPC {
     ) {
         let mut ipc_client = DiscordIpcClient::new(DISCORD_APP_ID).unwrap();
         let mut is_connected = false;
+        let mut last_connect_attempt = std::time::Instant::now() - Duration::from_secs(30);
 
         Self::spawn_connection_acceptor(listener, main_tx.clone());
 
@@ -83,24 +84,23 @@ impl DiscordRPC {
                 cmd = next_cmd;
             }
 
-            if !is_connected {
+            if !is_connected && last_connect_attempt.elapsed() >= Duration::from_secs(30) {
+                ipc_client = DiscordIpcClient::new(DISCORD_APP_ID).unwrap();
                 is_connected = ipc_client.connect().is_ok();
+                last_connect_attempt = std::time::Instant::now();
             }
 
             if is_connected {
-                match cmd {
+                is_connected = match cmd {
                     RpcCommand::SetActivity {
                         path,
                         workspace,
                         row,
                         col,
-                    } => {
-                        Self::handle_set_activity(&mut ipc_client, path, workspace, row, col);
-                    }
-                    RpcCommand::SetIdle => {
-                        Self::handle_set_idle(&mut ipc_client);
-                    }
-                }
+                    } => Self::handle_set_activity(&mut ipc_client, path, workspace, row, col),
+                    RpcCommand::SetIdle => Self::handle_set_idle(&mut ipc_client),
+                };
+                thread::sleep(Duration::from_secs(3));
             }
         }
     }
@@ -167,7 +167,7 @@ impl DiscordRPC {
         workspace: String,
         row: usize,
         col: usize,
-    ) {
+    ) -> bool {
         let filename = Path::new(&path)
             .file_name()
             .and_then(|n| n.to_str())
@@ -192,14 +192,12 @@ impl DiscordRPC {
                     .small_text("https://github.com/helix-editor/helix"),
             );
 
-        let _ = ipc_client.set_activity(activity);
-        thread::sleep(Duration::from_secs(3));
+        ipc_client.set_activity(activity).is_ok()
     }
 
-    fn handle_set_idle(ipc_client: &mut DiscordIpcClient) {
+    fn handle_set_idle(ipc_client: &mut DiscordIpcClient) -> bool {
         let activity = Activity::new().assets(Assets::new().small_image("idle"));
-        let _ = ipc_client.set_activity(activity);
-        thread::sleep(Duration::from_secs(3));
+        ipc_client.set_activity(activity).is_ok()
     }
 
     fn get_socket_name<'a>() -> Name<'a> {
