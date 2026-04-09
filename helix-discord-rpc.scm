@@ -11,12 +11,11 @@
 (#%require-dylib "libhelix_discord_rpc"
   (only-in
     DiscordRPC::new
-    DiscordRPC::connect
     DiscordRPC::set_activity
     DiscordRPC::set_idle))
 
 (define server (DiscordRPC::new))
-(define is-connected #false)
+(define is-connected #false) ; kinda misleading, this var means whether or not we should send events
 (define row 0)
 (define col 0)
 (define current-doc-id #false)
@@ -67,7 +66,7 @@
                                if
                                is-connected
                                "Websocket already connected"
-                               (begin (DiscordRPC::connect server)
+                               (begin
                                  (set! is-connected #true)
                                  (refresh-presence)
                                  "Websocket connected")))
