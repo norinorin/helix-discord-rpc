@@ -29,8 +29,7 @@
             mkdir -p $out/lib
             mkdir -p $out/share/helix-discord-rpc
 
-            find target -name "libhelix_discord_rpc.so" -o -name "libhelix_discord_rpc.dylib" -exec cp {} $out/lib/ \;
-
+            find target \( -name "libhelix_discord_rpc.so" -o -name "libhelix_discord_rpc.dylib" \) -exec cp {} $out/lib/ \;
             cp *.scm $out/share/helix-discord-rpc/
           '';
         };
