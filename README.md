@@ -83,7 +83,7 @@ To connect automatically, add the following line to your `init.scm`:
 - [x] IPC for multiple instances of Helix
 - [x] Language icons
 - [ ] Idle status
-- [ ] (Absolute) cursor position
+- [x] Cursor position
 - [ ] Git status
 - [ ] LSP workspace/file diagnostics
 - [ ] Configuration (either in .scm or .toml)

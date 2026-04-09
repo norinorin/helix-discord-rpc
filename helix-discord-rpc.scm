@@ -6,6 +6,7 @@
 (require "helix/editor.scm")
 (require "helix/misc.scm")
 (require "helix/components.scm")
+(require "helix/static.scm")
 
 ;; dylibs imports
 (#%require-dylib "libhelix_discord_rpc"
@@ -16,32 +17,22 @@
 
 (define server (DiscordRPC::new))
 (define is-connected #false) ; a bit misleading, this var means whether or not we should send events
-(define row 0)
-(define col 0)
 (define current-doc-id #false)
-
-(define (get-cursor-row-col)
-  (match (current-cursor)
-    [#f ; checks whether if cursor is invisible?
-      (set-status! "No primary cursor is visible")]
-    [(list pos kind) ; when visible, it's a list of Position? & CursorKind (wtf is that? [normal/select/visual?])
-      (set! row (position-row pos))
-      (set! col (position-col pos))]))
 
 (define (refresh-presence)
   (when is-connected
-    (get-cursor-row-col)
     (let ([doc-path (and current-doc-id (editor-document->path current-doc-id))])
       (DiscordRPC::set_activity
         server
         (if doc-path (to-string doc-path) "<unnamed buffer>")
         (helix-find-workspace)
-        row
-        col))))
+        (+ (get-current-line-number) 1) ; line and col are 0-indexed
+        (+ (get-current-column-number) 1)))))
 
 ; We only probably only need selection-did-change and document-changed
 (register-hook! 'selection-did-change
-  (lambda (view-id) (refresh-presence)))
+  (lambda (view-id)
+    (refresh-presence)))
 
 ; FIXME: maybe this will change to document-did-change
 (register-hook! 'document-changed

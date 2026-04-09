@@ -173,14 +173,12 @@ impl DiscordRPC {
             .and_then(|n| n.to_str())
             .unwrap_or("Unknown");
 
-        let state = format!("Editing {} {}:{}", filename, row, col.saturating_sub(6));
-
+        let state = format!("Editing {} {}:{}", filename, row, col);
         let folder = Path::new(&workspace)
             .file_name()
             .and_then(|n| n.to_str())
             .unwrap_or("Unknown");
         let details = format!("Workspace {}", folder);
-
         let asset_url = get_asset_url(filename);
         let activity = activity::Activity::new()
             .state(&state)
