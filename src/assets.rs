@@ -1,57 +1,84 @@
-use std::path::Path;
+use const_format::concatcp;
+use regex::{Regex, RegexBuilder};
+use serde::Deserialize;
+use std::collections::HashMap;
+use std::sync::LazyLock;
 
-/// This function return the corresponding asset id which is the name of the file in the discord developper portal
-/// We match first on the filename if it is known it is returned, else we match on the extension.
-/// If the extension is unknown then it falls back to helix icon
-/// Note that you are not able to know in advance the asset id, only @ciflire can, so if you have any remark please open an issue
-pub fn get_asset(filename: String) -> String {
-    let extension = Path::new(&filename)
-        .extension()
-        .and_then(|e| e.to_str())
-        .unwrap_or_default();
-    let res = match filename.as_str() {
-        "Cargo.toml" | "Cargo.lock" => "cargo".to_string(),
-        "hyprland.conf" | "hyprlock.conf" | "hyprpaper.conf" | "hypridle.conf" => {
-            "hyprland".to_string()
+#[derive(Deserialize)]
+struct VscordData {
+    #[serde(rename = "KNOWN_EXTENSIONS")]
+    known_extensions: HashMap<String, AssetNode>,
+}
+
+#[derive(Deserialize)]
+struct AssetNode {
+    image: String,
+}
+
+struct AssetMap {
+    exact_extensions: HashMap<String, String>,
+    regex_patterns: Vec<(Regex, String)>,
+}
+
+const ASSET_BASE_URL: &str =
+    "https://raw.githubusercontent.com/norinorin/helix-discord-rpc/refs/heads/main/assets/icons/";
+pub const HELIX_ICON_URL: &str = concatcp!(ASSET_BASE_URL, "helix.png");
+pub const IDLE_ICON_URL: &str = concatcp!(ASSET_BASE_URL, "idle.png");
+
+static ASSET_MAP: LazyLock<AssetMap> = LazyLock::new(|| {
+    let raw_json = include_str!("../assets/vscord-languages.json");
+    let data: VscordData = serde_json::from_str(raw_json).expect("Invalid JSON");
+
+    let mut regex_patterns = Vec::new();
+    let mut exact_extensions = HashMap::new();
+
+    for (pattern, node) in data.known_extensions {
+        if pattern.starts_with('/') {
+            let parts: Vec<&str> = pattern.split('/').collect();
+            if parts.len() >= 3 {
+                let raw_regex = parts[1];
+                let is_case_insensitive = parts[2].contains('i');
+                if let Ok(re) = RegexBuilder::new(raw_regex)
+                    .case_insensitive(is_case_insensitive)
+                    .build()
+                {
+                    regex_patterns.push((re, node.image));
+                }
+            }
+        } else {
+            exact_extensions.insert(pattern.to_lowercase(), node.image);
         }
-        "CMakeLists.txt" => "cmake".to_string(),
-        ".gitignore" | ".gitsubmodules" => "git".to_string(),
-        _ => String::new(),
-    };
-    if !res.is_empty() {
-        return res;
     }
-    match extension {
-        "c" | "h" => "c".to_string(),
-        "cpy" | "copy" | "cbl" | "cob" | "cobol" => "cobol".to_string(),
-        "cpp" | "hpp" => "cpp".to_string(),
-        "cs" => "csharp".to_string(),
-        "css" | "scss" => "css".to_string(),
-        "gleam" => "gleam".to_string(),
-        "glsl" => "glsl".to_string(),
-        "gd" => "godot".to_string(),
-        "go" => "go".to_string(),
-        "hlsl" => "hlsl".to_string(),
-        "html" => "html".to_string(),
-        "java" | "class" => "java".to_string(),
-        "js" => "js".to_string(),
-        "json" => "json".to_string(),
-        "lua" => "lua".to_string(),
-        "md" => "markdown".to_string(),
-        "nix" => "nix".to_string(),
-        "py" => "python".to_string(),
-        "rs" => "rust".to_string(),
-        "sh" | "nu" | "bat" => "shell".to_string(),
-        "scm" | "ss" => "scheme".to_string(),
-        "swift" => "swift".to_string(),
-        "tex" => "tex".to_string(),
-        "toml" => "toml".to_string(),
-        "ts" => "ts".to_string(),
-        "typ" => "typst".to_string(),
-        "xaml" => "xaml".to_string(),
-        "xml" => "xml".to_string(),
-        "yaml" => "yaml".to_string(),
-        "zig" => "zig".to_string(),
-        _ => "helix".to_string(),
+
+    AssetMap {
+        exact_extensions,
+        regex_patterns,
     }
+});
+
+pub fn get_asset_url(filename: &str) -> String {
+    let map = &*ASSET_MAP;
+
+    let mut matched_asset = None;
+    for (re, asset) in &map.regex_patterns {
+        if re.is_match(filename) {
+            matched_asset = Some(asset.as_str());
+            break;
+        }
+    }
+
+    let final_asset = matched_asset.unwrap_or_else(|| {
+        let ext = std::path::Path::new(filename)
+            .extension()
+            .and_then(|e| e.to_str())
+            .unwrap_or("")
+            .to_lowercase();
+
+        map.exact_extensions
+            .get(&ext)
+            .map(|s| s.as_str())
+            .unwrap_or("text")
+    });
+
+    format!("{}{}.png", ASSET_BASE_URL, final_asset)
 }

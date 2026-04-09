@@ -1,0 +1,928 @@
+{
+    "KNOWN_LANGUAGES": [
+        {
+            "language": "bat",
+            "image": "bat"
+        },
+        {
+            "language": "clojure",
+            "image": "clojure"
+        },
+        {
+            "language": "coffeescript",
+            "image": "coffee"
+        },
+        {
+            "language": "jsonc",
+            "image": "json"
+        },
+        {
+            "language": "json",
+            "image": "json"
+        },
+        {
+            "language": "c",
+            "image": "c"
+        },
+        {
+            "language": "cpp",
+            "image": "cpp"
+        },
+        {
+            "language": "cuda-cpp",
+            "image": "cuda"
+        },
+        {
+            "language": "csharp",
+            "image": "csharp"
+        },
+        {
+            "language": "css",
+            "image": "css"
+        },
+        {
+            "language": "dart",
+            "image": "dart"
+        },
+        {
+            "language": "diff",
+            "image": "manifest"
+        },
+        {
+            "language": "dockerfile",
+            "image": "docker"
+        },
+        {
+            "language": "dotenv",
+            "image": "env"
+        },
+        {
+            "language": "ignore",
+            "image": "git"
+        },
+        {
+            "language": "fsharp",
+            "image": "fsharp"
+        },
+        {
+            "language": "git-commit",
+            "image": "manifest"
+        },
+        {
+            "language": "git-rebase",
+            "image": "manifest"
+        },
+        {
+            "language": "go",
+            "image": "go"
+        },
+        {
+            "language": "groovy",
+            "image": "groovy"
+        },
+        {
+            "language": "handlebars",
+            "image": "handlebars"
+        },
+        {
+            "language": "hlsl",
+            "image": "hlsl"
+        },
+        {
+            "language": "html",
+            "image": "html"
+        },
+        {
+            "language": "ini",
+            "image": "manifest"
+        },
+        {
+            "language": "properties",
+            "image": "manifest"
+        },
+        {
+            "language": "java",
+            "image": "java"
+        },
+        {
+            "language": "javascriptreact",
+            "image": "jsx"
+        },
+        {
+            "language": "javascript",
+            "image": "js"
+        },
+        {
+            "language": "jsx-tags",
+            "image": "jsx"
+        },
+        {
+            "language": "jsonl",
+            "image": "json"
+        },
+        {
+            "language": "snippets",
+            "image": "json"
+        },
+        {
+            "language": "julia",
+            "image": "julia"
+        },
+        {
+            "language": "juliamarkdown",
+            "image": "julia"
+        },
+        {
+            "language": "tex",
+            "image": "tex"
+        },
+        {
+            "language": "latex",
+            "image": "tex"
+        },
+        {
+            "language": "bibtex",
+            "image": "text"
+        },
+        {
+            "language": "cpp_embedded_latex",
+            "image": "cpp"
+        },
+        {
+            "language": "markdown_latex_combined",
+            "image": "markdown"
+        },
+        {
+            "language": "less",
+            "image": "less"
+        },
+        {
+            "language": "log",
+            "image": "log"
+        },
+        {
+            "language": "lua",
+            "image": "lua"
+        },
+        {
+            "language": "makefile",
+            "image": "makefile"
+        },
+        {
+            "language": "markdown",
+            "image": "markdown"
+        },
+        {
+            "language": "markdown-math",
+            "image": "markdown"
+        },
+        {
+            "language": "wat",
+            "image": "wasm"
+        },
+        {
+            "language": "wikitext",
+            "image": "wikitext"
+        },
+        {
+            "language": "objective-c",
+            "image": "objective-c"
+        },
+        {
+            "language": "objective-cpp",
+            "image": "objective-c"
+        },
+        {
+            "language": "perl",
+            "image": "perl"
+        },
+        {
+            "language": "raku",
+            "image": "perl"
+        },
+        {
+            "language": "php",
+            "image": "php"
+        },
+        {
+            "language": "powershell",
+            "image": "powershell"
+        },
+        {
+            "language": "prompt",
+            "image": "text"
+        },
+        {
+            "language": "instructions",
+            "image": "text"
+        },
+        {
+            "language": "chatagent",
+            "image": "text"
+        },
+        {
+            "language": "jade",
+            "image": "pug"
+        },
+        {
+            "language": "python",
+            "image": "python"
+        },
+        {
+            "language": "r",
+            "image": "r"
+        },
+        {
+            "language": "razor",
+            "image": "razor"
+        },
+        {
+            "language": "restructuredtext",
+            "image": "restructuredtext"
+        },
+        {
+            "language": "ruby",
+            "image": "ruby"
+        },
+        {
+            "language": "rust",
+            "image": "rust"
+        },
+        {
+            "language": "scss",
+            "image": "scss"
+        },
+        {
+            "language": "search-result",
+            "image": "text"
+        },
+        {
+            "language": "shaderlab",
+            "image": "manifest"
+        },
+        {
+            "language": "shellscript",
+            "image": "shell"
+        },
+        {
+            "language": "sql",
+            "image": "sql"
+        },
+        {
+            "language": "swift",
+            "image": "swift"
+        },
+        {
+            "language": "typescript",
+            "image": "ts"
+        },
+        {
+            "language": "typescriptreact",
+            "image": "tsx"
+        },
+        {
+            "language": "vb",
+            "image": "vb"
+        },
+        {
+            "language": "xml",
+            "image": "xml"
+        },
+        {
+            "language": "xsl",
+            "image": "xml"
+        },
+        {
+            "language": "dockercompose",
+            "image": "docker"
+        },
+        {
+            "language": "yaml",
+            "image": "yaml"
+        }
+    ],
+    "KNOWN_EXTENSIONS": {
+        "/(cargo\\.toml|cargo\\.lock)/i": {
+            "image": "cargo"
+        },
+        "/(vercel|now)\\.json|\\.(now|vercel)ignore/i": {
+            "image": "vercel"
+        },
+        "/(\\\\|\\/)dev[-\\w]+\\1(?:[^\\\\\\/]+\\1)*(?!DESC|NOTES)(?:[A-Z][-A-Z]*)(?:\\.in)?$|[\\/\\\\](?:magic[\\/\\\\]Magdir|file[\\/\\\\]magic)[\\/\\\\][-.\\w]+$|^pkginfo$|^mime\\.types$|^METADATA\\.pb$|\\.git[\\/\\\\](.*[\\/\\\\])?(HEAD|ORIG_HEAD|packed-refs|logs[\\/\\\\](.+[\\/\\\\])?[^\\/\\\\]+)$|\\.(geo|topo|cson|json5|ndjson|fea|json\\.eex|proto|pytb|pydeps|pot?|ejson|edn|eam\\.fs|qml|qbs|ston|ttl|rviz|syntax|webmanifest)$/": {
+            "image": "manifest"
+        },
+        "/(\\.)?appveyor\\.yml/i": {
+            "image": "appveyor"
+        },
+        "/(\\.firebaserc|firebase\\.json)/i": {
+            "image": "firebase"
+        },
+        "/\\.editorconfig$/": {
+            "image": "editorconfig"
+        },
+        "/\\.env$/": {
+            "image": "env"
+        },
+        "/\\.babelrc$|babel\\.config\\.js/i": {
+            "image": "babel"
+        },
+        "/\\.codeclimate\\.(yml|json)/i": {
+            "image": "codeclimate"
+        },
+        "/\\.eslint((rc|ignore)|(\\.(json|js))?$){2}/i": {
+            "image": "eslint"
+        },
+        "/\\.flowconfig$/": {
+            "image": "flowconfig"
+        },
+        "/\\.jest\\.config\\.(js|ts)/i": {
+            "image": "jest"
+        },
+        "/\\.npmrc$|\\.npmignore$|^package\\.json$/": {
+            "image": "npm"
+        },
+        "/\\.prettier((rc)|(\\.(toml|yml|yaml|json|js))?$){2}$|\\prettier.config.js$|\\.prettierignore$/": {
+            "image": "prettier"
+        },
+        "/\\.prisma$|prisma\\.yml$/": {
+            "image": "prisma"
+        },
+        "/\\.tailwind\\.config\\.(js|cjs|mjs|ts|cts|mts)/i": {
+            "image": "tailwind"
+        },
+        "/\\.tfvars$|\\.tf$/": {
+            "image": "terraform"
+        },
+        "/\\.travis\\.yml$/": {
+            "image": "travis"
+        },
+        "/\\.vite\\.config\\.(js|ts)/i": {
+            "image": "viteconfig"
+        },
+        "/\\.vitest\\.config\\.(js|ts|mjs)/i": {
+            "image": "vitestconfig"
+        },
+        "/\\.vscodeignore$/": {
+            "image": "vscodeignore"
+        },
+        "/\\.vue\\.config\\.(js|ts)/i": {
+            "image": "vueconfig"
+        },
+        "/\\.webpack(\\.dev|\\.development|\\.prod|\\.production)?\\.config(\\.babel)?\\.(js|jsx|coffee|ts|json|json5|yaml|yml)/i": {
+            "image": "webpack"
+        },
+        "/\\.yarnrc$|^yarn(\\.lock)?$/": {
+            "image": "yarn"
+        },
+        "/\\.yumma\\.config\\.(cjs|js|mjs|ts)/i": {
+            "image": "yummacss"
+        },
+        "/\\.astro\\.config\\.mjs/i": {
+            "image": "astroconfig"
+        },
+        "/\\.gatsby-(browser|node|ssr|config)\\.js/i": {
+            "image": "gatsbyjs"
+        },
+        "/^contenthook\\.config\\.(ts|cjs|mjs|js)$/": {
+            "image": "contenthook"
+        },
+        "/^contentkit\\.config\\.(ts|cjs|mjs|js)$/": {
+            "image": "contentkit"
+        },
+        "/^nodemon\\.json$/": {
+            "image": "nodemon"
+        },
+        "/^turbo\\.json$/": {
+            "image": "turbo"
+        },
+        "/circle\\.yml$/": {
+            "image": "circleci"
+        },
+        "/^heroku\\.yml$|^procfile/i": {
+            "image": "heroku"
+        },
+        "/^[Gg]runtfile\\.(js|coffee)/i": {
+            "image": "gruntfile"
+        },
+        "/^gulpfile\\.js$/": {
+            "image": "gulp"
+        },
+        "/^Gemfile(\\.lock)?$/": {
+            "image": "gemfile"
+        },
+        "/^(\\.bowerrc|bower\\.json|Bowerfile)$/": {
+            "image": "bower"
+        },
+        "/^(BUILD)|(WORKSPACE)|(\\.bzl)|(\\.bazel(rc)?)|(\\.s(tar|ky))$/": {
+            "image": "bazel"
+        },
+        "/^Makefile$|^mk\\.config$|\\.(mk|mak|make)$|^BSDmakefile$|^GNUmakefile$|^makefile\\.sco$|^Kbuild$|^makefile$|^mkfile$|^\\.?qmake$/": {
+            "image": "makefile"
+        },
+        "/\\.cmake$|^CMakeLists\\.txt$/": {
+            "image": "cmake"
+        },
+        "/^(Dockerfile|docker-compose)|\\.docker(file|ignore)$|^docker-sync\\.yml$/": {
+            "image": "docker"
+        },
+        "/\\.dockercompose$/": {
+            "image": "docker"
+        },
+        "/androidmanifest\\.xml$|\\.bp$/": {
+            "image": "android"
+        },
+        "/\\.((c([+px]{2}?)?-?)?objdump|bsdiff|bin|dat|pak|pdb)$|\\.d-objdump|\\.(l?a|[ls]?o|out|s|a51|asm|axf|elf|prx|puff|z80)$|\\.agc$|\\.ko$|\\.lst$|\\.gcode|\\.gco|\\.rpy[bc]$|\\.py[co]$|\\.swp$|\\.DS_Store$/": {
+            "image": "assembly"
+        },
+        "/\\.([fF])(03|08|18|90|95)$/": {
+            "image": "fortran"
+        },
+        "/\\.([w]|(pd_))?lua$/": {
+            "image": "lua"
+        },
+        "/\\.?(pypirc|pythonrc|python-venv)$|^(SConstruct|SConscript|Snakefile|WATCHLISTS|wscript)$|\\.ipy$|\\.isolate$|\\.pep$|\\.gypi?$|\\.pyde$|\\.py([wi3tp]|(de))?$|\\.tac$|\\.wsgi$|\\.xpy$/": {
+            "image": "python"
+        },
+        "/\\.?(zura|zu)$/": {
+            "image": "zura"
+        },
+        "/\\.ado[c]|\\.asciidoc$/": {
+            "image": "asciidoc"
+        },
+        "/\\.ahkl?$/": {
+            "image": "ahk"
+        },
+        "/\\.applescript$/": {
+            "image": "applescript"
+        },
+        "/\\.as[pc][x]?|\\.as[ah]x|\\.axd$/": {
+            "image": "asp"
+        },
+        "/\\.astro$/": {
+            "image": "astro"
+        },
+        "/\\.au3$/": {
+            "image": "autoit"
+        },
+        "/\\.bat(ch)?$|\\.cmd$|\\.(exe|com|msi)$|\\.reg$/": {
+            "image": "bat"
+        },
+        "/\\.bf?$/": {
+            "image": "brainfuck"
+        },
+        "/\\.c$/": {
+            "image": "c"
+        },
+        "/\\.c2hs$|\\.lhs$|\\.hsc?$|\\.hs$/": {
+            "image": "haskell"
+        },
+        "/\\.c3$/": {
+            "image": "c3"
+        },
+        "/\\.casc?$|\\.cas$/": {
+            "image": "casc"
+        },
+        "/\\.ces$/": {
+            "image": "citrinescript"
+        },
+        "/\\.cf[cm]$/": {
+            "image": "coldfusion"
+        },
+        "/\\.clj[cx2]?$|\\.hic$|\\.cljs(cm)?$/": {
+            "image": "clojure"
+        },
+        "/\\.cob(ol)?$/": {
+            "image": "cobol"
+        },
+        "/\\.coffee(\\.e[cr]b)?$|\\.cjsx$|\\.litcoffee$|\\.iced$/": {
+            "image": "coffee"
+        },
+        "/\\.cos$|\\.⭐$/": {
+            "image": "cosmo"
+        },
+        "/\\.c[+px]{2}$|\\.cc$|\\.h[+px]{2}$|\\.[it]pp$|\\.(tcc|inl)$|\\.cats$|\\.idc$|\\.w$|\\.nc$|\\.upc$|\\.xpm$/": {
+            "image": "cpp"
+        },
+        "/\\.csx?$/": {
+            "image": "csharp"
+        },
+        "/\\.csproj$|\\.sln$/": {
+            "image": "csproj"
+        },
+        "/\\.css\\.map$/": {
+            "image": "cssmap"
+        },
+        "/\\.css$/": {
+            "image": "css"
+        },
+        "/\\.cu$/": {
+            "image": "cuda"
+        },
+        "/\\.dart$/": {
+            "image": "dart"
+        },
+        "/\\.dfm$|\\.dpr$/": {
+            "image": "delphi"
+        },
+        "/\\.di?$/": {
+            "image": "d"
+        },
+        "/\\.dm[em]?$/": {
+            "image": "dm"
+        },
+        "/\\.dsc$/": {
+            "image": "denizen"
+        },
+        "/\\.d\\.ts/i": {
+            "image": "typescript-def"
+        },
+        "/\\.e?cr$/": {
+            "image": "crystal"
+        },
+        "/\\.ejs$/": {
+            "image": "ejs"
+        },
+        "/\\.eliom[i]?$|\\.ml[4lyi]?$/": {
+            "image": "ocaml"
+        },
+        "/\\.elm$/": {
+            "image": "elm"
+        },
+        "/\\.erl$|\\.beam$|\\.[hxy]rl$|\\.app\\.src$|^Emakefile$|^rebar(\\.config)?\\.lock$/": {
+            "image": "erlang"
+        },
+        "/\\.ex$|\\.(exs|l?eex)$|^mix\\.(exs?|lock)$/": {
+            "image": "elixir"
+        },
+        "/\\.fountain$|\\.spmd$/": {
+            "image": "fountain"
+        },
+        "/\\.fs[ix]?$|\\.fsscript$/": {
+            "image": "fsharp"
+        },
+        "/\\.g(d|odot)$/": {
+            "image": "godot"
+        },
+        "/\\.gleam$/": {
+            "image": "gleam"
+        },
+        "/\\.glsl$|\\.(vert|frag|geom|tesc|tese|comp)$/": {
+            "image": "glsl"
+        },
+        "/\\.gml$/": {
+            "image": "gml"
+        },
+        "/\\.go$/": {
+            "image": "go"
+        },
+        "/\\.gql$|\\.graphql$/": {
+            "image": "graphql"
+        },
+        "/\\.gradle$|^gradlew$/": {
+            "image": "gradle"
+        },
+        "/\\.gr$/": {
+            "image": "grain"
+        },
+        "/\\.groovy$|\\.gv?y$|\\.gsh$/": {
+            "image": "groovy"
+        },
+        "/\\.gypi?$/": {
+            "image": "python"
+        },
+        "/\\.gz$/": {
+            "image": "zip"
+        },
+        "/\\.handlebars$|\\.(hbs|(mu)?stache)$/": {
+            "image": "handlebars"
+        },
+        "/\\.ha$/": {
+            "image": "hare"
+        },
+        "/\\.hc$/": {
+            "image": "holyc"
+        },
+        "/\\.heex$/": {
+            "image": "heex"
+        },
+        "/\\.hjson$/": {
+            "image": "hjson"
+        },
+        "/\\.hlsl$|\\.(cginc|cg|shader|fx)$/": {
+            "image": "hlsl"
+        },
+        "/\\.h?prg$|\\.hb[pc]$|\\.rc$|\\.fmg$/": {
+            "image": "harbour"
+        },
+        "/\\.htt?p$|\\.rest$/": {
+            "image": "http"
+        },
+        "/\\.hx(ml)?$/": {
+            "image": "haxe"
+        },
+        "/\\.ino$/": {
+            "image": "arduino"
+        },
+        "/\\.jar$/": {
+            "image": "jar"
+        },
+        "/\\.java$/": {
+            "image": "java"
+        },
+        "/\\.jil$|\\.jl$/": {
+            "image": "julia"
+        },
+        "/\\.jinja$|\\.j2$/": {
+            "image": "jinja"
+        },
+        "/\\.jsonc?$/": {
+            "image": "json"
+        },
+        "/\\.js\\.map$/": {
+            "image": "jsmap"
+        },
+        "/\\.jsx$/": {
+            "image": "jsx"
+        },
+        "/\\.jule$/": {
+            "image": "jule"
+        },
+        "/\\.kt[ms]?$/": {
+            "image": "kotlin"
+        },
+        "/\\.kv$/": {
+            "image": "kivy"
+        },
+        "/\\.l?agda$/": {
+            "image": "agda"
+        },
+        "/\\.lean(4markdown)?$/": {
+            "image": "lean"
+        },
+        "/\\.less$/": {
+            "image": "less"
+        },
+        "/\\.l(i?sp)?$|\\.n[ly]$|\\.podsl$|\\.s([s]|(cm)|(exp))$/": {
+            "image": "lisp"
+        },
+        "/\\.log$/": {
+            "image": "log"
+        },
+        "/\\.ls$/": {
+            "image": "livescript"
+        },
+        "/\\.luau$|\\.rbx(?:lx|l|m|s)?$/": {
+            "image": "luau"
+        },
+        "/\\.maeel$/": {
+            "image": "maeel"
+        },
+        "/\\.marko$/": {
+            "image": "marko"
+        },
+        "/\\.mdx$/": {
+            "image": "markdownx"
+        },
+        "/\\.mk[vi]i$|\\.mkiv$/": {
+            "image": "tex"
+        },
+        "/\\.mm?$/": {
+            "image": "objective-c"
+        },
+        "/\\.mojo$|\\.🔥$/": {
+            "image": "mojo"
+        },
+        "/\\.moon$/": {
+            "image": "moonscript"
+        },
+        "/\\.mt$/": {
+            "image": "metal"
+        },
+        "/\\.m$/": {
+            "image": "matlab"
+        },
+        "/\\.nim(s|ble)?$/": {
+            "image": "nim"
+        },
+        "/\\.nix$/": {
+            "image": "nix"
+        },
+        "/\\.nut$/": {
+            "image": "squirrel"
+        },
+        "/\\.odin$/": {
+            "image": "odin"
+        },
+        "/\\.onyx$/": {
+            "image": "onyx"
+        },
+        "/\\.opengoal$|\\.gc$/": {
+            "image": "opengoal"
+        },
+        "/\\.opengoal-goos$|\\.goos$/": {
+            "image": "opengoal-goos"
+        },
+        "/\\.opengoal-ir$|\\.ir$/": {
+            "image": "opengoal-ir"
+        },
+        "/\\.pas(cal)?$|\\.lpr$/": {
+            "image": "pascal"
+        },
+        "/\\.pawn$|\\.inc$|\\.sma$|\\.p(wn)?$/": {
+            "image": "pawn"
+        },
+        "/\\.pch$|\\.x$/": {
+            "image": "objective-c"
+        },
+        "/\\.pcss$/": {
+            "image": "postcss"
+        },
+        "/\\.pde$/": {
+            "image": "processing"
+        },
+        "/\\.puml$|\\.pu$/": {
+            "image": "plantuml"
+        },
+        "/\\.p(er)?l$|\\.al$|\\.p([hm]|(lx))$|\\.(psgi|xs)$|\\.pl6$|\\.[tp]6$|\\.6pl$|\\.(pm6|p6m)$|\\.6pm$|\\.nqp$|\\.p6l$|\\.pod6$|^Rexfile$/": {
+            "image": "perl"
+        },
+        "/\\.php([st\\d]|_cs)?$|^Phakefile/i": {
+            "image": "php"
+        },
+        "/\\.pony$/": {
+            "image": "ponylang"
+        },
+        "/\\.ps[md]?1$|\\.ps1xml$/": {
+            "image": "powershell"
+        },
+        "/\\.pug$|\\.jade$/": {
+            "image": "pug"
+        },
+        "/\\.purs$/": {
+            "image": "purescript"
+        },
+        "/\\.pyx$/": {
+            "image": "cython"
+        },
+        "/\\.razor$|\\.cshtml$/": {
+            "image": "razor"
+        },
+        "/\\.rb$|\\.ru$|\\.ruby$|\\.erb$|\\.gemspec$|\\.god$|\\.mspec$|\\.pluginspec$|\\.podspec$|\\.rabl$|\\.rake$|\\.opal$|\\.?(irbrc|gemrc|pryrc|ruby-(gemset|version))$|^(Appraisals|(Rake|[bB]uild|Cap|Danger|Deliver|Fast|Guard|Jar|Maven|Pod|Puppet|Snap)file(\\.lock)?)$|\\.(jbuilder|rbuild|rb[wx]|builder)$|^rails$|\\.watchr$/": {
+            "image": "ruby"
+        },
+        "/\\.res?i?$/": {
+            "image": "reasonml"
+        },
+        "/\\.rkt$/": {
+            "image": "racket"
+        },
+        "/\\.rpy(?:m|mc|c|b)?$/": {
+            "image": "renpy"
+        },
+        "/\\.rs$/": {
+            "image": "rust"
+        },
+        "/\\.rst$/": {
+            "image": "restructuredtext"
+        },
+        "/\\.r$|\\.Rprofile$|\\.rsx$|\\.rd$/": {
+            "image": "r"
+        },
+        "/\\.s[ac]ss$/": {
+            "image": "scss"
+        },
+        "/\\.sc(ala)?$/": {
+            "image": "scala"
+        },
+        "/\\.sh$|\\.rc$|\\.bats$|\\.bash$|\\.tool$|\\.install$|\\.command$|^(\\.?bash(rc|[-_]?(profile|login|logout|history|prompt))|_osc|config|install-sh|PKGBUILD)$|\\.(ksh|mksh|pdksh)$|\\.sh-session$|\\.zsh(-theme|_history)?$|^\\.?(antigen|zpreztorc|zlogin|zlogout|zprofile|zshenv|zshrc)$|\\.fish$|^\\.fishrc$|^\\.?(login|profile)$|\\.inputrc$|\\.tmux$|^(configure|config\\.(guess|rpath|status|sub)|depcomp|libtool|compile)$|^\\/(private\\/)?etc\\/([^\\/]+\\/)*(profile$|nanorc$|rc\\.|csh\\.)|^\\.?cshrc$|\\.profile$|\\.tcsh$|\\.csh$/": {
+            "image": "shell"
+        },
+        "/\\.sk$/": {
+            "image": "skript"
+        },
+        "/\\.sol$/": {
+            "image": "solidity"
+        },
+        "/\\.sp$/": {
+            "image": "sourcepawn"
+        },
+        "/\\.sqf$/": {
+            "image": "sqf"
+        },
+        "/\\.sql$|\\.mysql$|\\.ddl$|\\.udf$|\\.hql$|\\.viw$|\\.prc$|\\.cql$|\\.db2$/": {
+            "image": "sql"
+        },
+        "/\\.styl(us)?$/": {
+            "image": "stylus"
+        },
+        "/\\.sv(h)?$/": {
+            "image": "systemverilog"
+        },
+        "/\\.svelte$/": {
+            "image": "svelte"
+        },
+        "/\\.svg$/": {
+            "image": "svg"
+        },
+        "/\\.swf$|\\.as$|\\.jsfl$|\\.swc$/": {
+            "image": "as"
+        },
+        "/\\.swift$/": {
+            "image": "swift"
+        },
+        "/\\.templ$/": {
+            "image": "templ"
+        },
+        "/\\.te?xt$|\\.rtf$|\\.i?nfo$|\\.msg$|\\.utxt$|\\.utf8$/": {
+            "image": "text"
+        },
+        "/\\.tex(i)?$|\\.ltx$|\\.aux$|\\.sty$|\\.dtx$|\\.cls$|\\.ins$|\\.lbx$|^hyphen(ex)?\\.(cs|den|det|fr|sv|us)$/": {
+            "image": "tex"
+        },
+        "/\\.toml$/": {
+            "image": "toml"
+        },
+        "/\\.tsx$/": {
+            "image": "tsx"
+        },
+        "/\\.ts\\.map$/": {
+            "image": "tsmap"
+        },
+        "/\\.ts$/": {
+            "image": "ts"
+        },
+        "/\\.twig$/": {
+            "image": "twig"
+        },
+        "/\\.typ$/": {
+            "image": "typst"
+        },
+        "/\\.umm$/": {
+            "image": "umm"
+        },
+        "/\\.vala$|\\.vapi$/": {
+            "image": "vala"
+        },
+        "/\\.vba$/": {
+            "image": "vba"
+        },
+        "/\\.vb$|\\.vbs$|\\.vbhtml$|\\.vbproj$/": {
+            "image": "vb"
+        },
+        "/\\.vcxproj$/": {
+            "image": "vcxproj"
+        },
+        "/\\.verse$/": {
+            "image": "verse"
+        },
+        "/\\.vhd(l)?$/": {
+            "image": "vhdl"
+        },
+        "/\\.vue$/": {
+            "image": "vue"
+        },
+        "/\\.v$|\\.vh$/": {
+            "image": "v"
+        },
+        "/\\.wa(sm|t|st)$/": {
+            "image": "wasm"
+        },
+        "/\\.(wiki(text)?|mediawiki)$/": {
+            "image": "wikitext"
+        },
+        "/\\.x(ml|aml)$/": {
+            "image": "xml"
+        },
+        "/\\.ya?ml$/": {
+            "image": "yaml"
+        },
+        "/\\.zig$/": {
+            "image": "zig"
+        },
+        "/\\.zs$/": {
+            "image": "zs"
+        },
+        "/^angular[^.]*\\.js$|\\.ng$/": {
+            "image": "angular"
+        },
+        "/^ipynb$/": {
+            "image": "jupyter"
+        },
+        "/^ks$/": {
+            "image": "kag-script"
+        },
+        "/^tjs$/": {
+            "image": "kirikiri-tpv-javascript"
+        },
+        "/g(sc|c)$/": {
+            "image": "gamescript"
+        },
+        "/s(s|tylus)$/": {
+            "image": "stylus"
+        },
+        "/\\.(es6?|m?js|pac)$/": {
+            "image": "js"
+        }
+    }
+}
+

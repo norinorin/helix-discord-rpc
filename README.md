@@ -90,4 +90,5 @@ To connect automatically, add the following line to your `init.scm`:
 
 ## Acknowledgements
 
-- [vscord](https://github.com/leonardssh/vscord) for providing assets and inspiration.
+- [vscord](https://github.com/narcisbugeag/vscord): Assets (icons and languages mapping data)
+  are sourced from the `vscord` project, licensed under the MIT license.

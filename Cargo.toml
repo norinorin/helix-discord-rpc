@@ -9,8 +9,12 @@ crate-type = ["cdylib"]
 
 [dependencies]
 abi_stable = "0.11.3"
+const_format = "0.2.35"
 discord-rich-presence = "0.2.5"
 env_logger = "0.11.8"
 interprocess = "2.4.0"
+regex = "1.12.3"
 rkyv = "0.8.15"
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.149"
 steel-core = { version = "0.8.2", features = ["dylibs", "sync"] }

@@ -13,10 +13,10 @@ use std::thread;
 use std::time::Duration;
 use steel::rvals::Custom;
 
-use crate::assets::get_asset;
+use crate::assets::{HELIX_ICON_URL, IDLE_ICON_URL, get_asset_url};
 
 const SOCKET_BASE_NAME: &str = "helix-discord-rpc.sock";
-const DISCORD_APP_ID: &str = "1173288863217766421";
+const DISCORD_APP_ID: &str = "1491839617421414581";
 
 #[derive(Archive, Serialize, Deserialize, Debug, Clone)]
 pub enum RpcCommand {
@@ -181,22 +181,22 @@ impl DiscordRPC {
             .unwrap_or("Unknown");
         let details = format!("Workspace {}", folder);
 
-        let asset_name = get_asset(filename.to_string());
+        let asset_url = get_asset_url(filename);
         let activity = activity::Activity::new()
             .state(&state)
             .details(&details)
             .assets(
                 Assets::new()
-                    .large_image(&asset_name)
-                    .small_image("helix")
-                    .small_text("https://github.com/helix-editor/helix"),
+                    .large_image(&asset_url)
+                    .small_image(HELIX_ICON_URL)
+                    .small_text("A post-modern modal text editor"),
             );
 
         ipc_client.set_activity(activity).is_ok()
     }
 
     fn handle_set_idle(ipc_client: &mut DiscordIpcClient) -> bool {
-        let activity = Activity::new().assets(Assets::new().small_image("idle"));
+        let activity = Activity::new().assets(Assets::new().small_image(IDLE_ICON_URL));
         ipc_client.set_activity(activity).is_ok()
     }
 
