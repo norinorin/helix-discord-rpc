@@ -19,6 +19,7 @@
 (define is-connected #false)
 (define row 0)
 (define col 0)
+(define current-doc-id #false)
 
 (define (get-cursor-row-col)
   (match (current-cursor)
@@ -28,20 +29,37 @@
       (set! row (position-row pos))
       (set! col (position-col pos))]))
 
-(register-hook!
-  'document-focus-lost
-  (lambda
-    (doc-id)
-    (if
-      is-connected
-      (begin
-        (get-cursor-row-col)
-        (DiscordRPC::set_activity
-          server
-          (to-string (editor-document->path doc-id))
-          (helix-find-workspace)
-          row
-          col)))))
+(define (refresh-presence)
+  (when is-connected
+    (get-cursor-row-col)
+    (let ([doc-path (and current-doc-id (editor-document->path current-doc-id))])
+      (DiscordRPC::set_activity
+        server
+        (if doc-path (to-string doc-path) "<unnamed buffer>")
+        (helix-find-workspace)
+        row
+        col))))
+
+; We only probably only need selection-did-change and document-changed
+(register-hook! 'selection-did-change
+  (lambda (view-id) (refresh-presence)))
+
+; FIXME: maybe this will change to document-did-change
+(register-hook! 'document-changed
+  (lambda (doc-id old_text)
+    (set! current-doc-id doc-id)
+    (refresh-presence)))
+
+; FIXME: maybe this will change to document-did-open
+(register-hook! 'document-opened
+  (lambda (doc-id)
+    (set! current-doc-id doc-id)
+    (refresh-presence)))
+
+(register-hook! 'document-focus-lost
+  (lambda (doc-id)
+    (set! current-doc-id doc-id)
+    (refresh-presence)))
 
 ;;@docs
 ; Connects the server to discord's websocket
@@ -49,6 +67,9 @@
                                if
                                is-connected
                                "Websocket already connected"
-                               (begin (DiscordRPC::connect server) (set! is-connected #true) "Websocket connected")))
+                               (begin (DiscordRPC::connect server)
+                                 (set! is-connected #true)
+                                 (refresh-presence)
+                                 "Websocket connected")))
 
 (provide discord-rpc-connect)
