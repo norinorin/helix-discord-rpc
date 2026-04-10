@@ -69,11 +69,63 @@ in {
 
 </details>
 
-To connect automatically, add the following line to your `init.scm`:
+## Examples
 
-```
+<details>
+
+<summary>Connecting automatically</summary>
+
+```scm
+; init.scm
+(require "plugins/helix-discord-rpc/helix-discord-rpc.scm")
+
 (discord-rpc-connect)
 ```
+
+</details>
+
+<details>
+
+<summary>Hidden workspace and filename</summary>
+
+```scm
+; init.scm
+(require-builtin steel/strings)
+
+(require "plugins/helix-discord-rpc/helix-discord-rpc.scm")
+(require "plugins/helix-discord-rpc/utils.scm")
+
+(discord-rpc-register-details-fn
+  (lambda ()
+    "In a workspace"))
+
+; naive impl
+(define (a-or-an word)
+  (let ([w (string-downcase word)])
+    (if (or (starts-with? w "a")
+         (starts-with? w "e")
+         (starts-with? w "i")
+         (starts-with? w "o")
+         (starts-with? w "u"))
+      "an"
+      "a")))
+
+(discord-rpc-register-state-fn
+  (lambda ()
+    (let ([lang (discord-rpc-current-language)])
+      (if (string=? lang "")
+        "Editing a file"
+        (string-append
+          "Editing "
+          (a-or-an lang)
+          " "
+          lang
+          " file")))))
+
+(discord-rpc-connect)
+```
+
+</details>
 
 ## Features
 
@@ -82,11 +134,11 @@ To connect automatically, add the following line to your `init.scm`:
   - [x] On file change
 - [x] IPC for multiple instances of Helix
 - [x] Language icons
-- [ ] Idle status
+- [ ] Idle status (to be implemented in lib)
 - [x] Cursor position
-- [ ] Git status
-- [ ] LSP workspace/file diagnostics
-- [ ] Configuration (either in .scm or .toml)
+- [ ] Git status (to be implemented in steel?)
+- [ ] LSP workspace/file diagnostics (to be implemented in steel)
+- [x] Configuration
 
 ## Acknowledgements
 

@@ -22,9 +22,8 @@ const DISCORD_APP_ID: &str = "1491839617421414581";
 pub enum RpcCommand {
     SetActivity {
         path: String,
-        workspace: String,
-        row: usize,
-        col: usize,
+        details: String,
+        state: String,
     },
     SetIdle,
 }
@@ -45,12 +44,11 @@ impl DiscordRPC {
         DiscordRPC { tx }
     }
 
-    pub fn set_activity(&mut self, path: String, workspace: String, row: usize, col: usize) {
+    pub fn set_activity(&mut self, path: String, details: String, state: String) {
         let _ = self.tx.send(RpcCommand::SetActivity {
             path,
-            workspace,
-            row,
-            col,
+            details,
+            state,
         });
     }
 
@@ -94,10 +92,9 @@ impl DiscordRPC {
                 is_connected = match cmd {
                     RpcCommand::SetActivity {
                         path,
-                        workspace,
-                        row,
-                        col,
-                    } => Self::handle_set_activity(&mut ipc_client, path, workspace, row, col),
+                        details,
+                        state,
+                    } => Self::handle_set_activity(&mut ipc_client, path, details, state),
                     RpcCommand::SetIdle => Self::handle_set_idle(&mut ipc_client),
                 };
                 thread::sleep(Duration::from_secs(3));
@@ -164,21 +161,13 @@ impl DiscordRPC {
     fn handle_set_activity(
         ipc_client: &mut DiscordIpcClient,
         path: String,
-        workspace: String,
-        row: usize,
-        col: usize,
+        details: String,
+        state: String,
     ) -> bool {
         let filename = Path::new(&path)
             .file_name()
             .and_then(|n| n.to_str())
             .unwrap_or("Unknown");
-
-        let state = format!("Editing {} {}:{}", filename, row, col);
-        let folder = Path::new(&workspace)
-            .file_name()
-            .and_then(|n| n.to_str())
-            .unwrap_or("Unknown");
-        let details = format!("Workspace {}", folder);
         let asset_url = get_asset_url(filename);
         let activity = activity::Activity::new()
             .state(&state)
