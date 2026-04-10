@@ -6,6 +6,7 @@ Discord RPC support for Helix via Steel.
 - [helix-discord-rpc](#helix-discord-rpc)
   - [Requirements](#requirements)
   - [Installation](#installation)
+  - [Examples](#examples)
   - [Features](#features)
   - [Acknowledgements](#acknowledgements)
 <!--toc:end-->
