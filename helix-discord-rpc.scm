@@ -4,7 +4,6 @@
 
 ;; Cogs imports
 (require "helix/editor.scm")
-(require "helix/misc.scm")
 (require "helix/components.scm")
 (require "helix/static.scm")
 
@@ -24,12 +23,12 @@
     (let ([doc-path (and current-doc-id (editor-document->path current-doc-id))])
       (DiscordRPC::set_activity
         server
-        (if doc-path (to-string doc-path) "<unnamed buffer>")
+        (if doc-path (to-string doc-path) "[scratch]")
         (helix-find-workspace)
         (+ (get-current-line-number) 1) ; line and col are 0-indexed
         (+ (get-current-column-number) 1)))))
 
-; We only probably only need selection-did-change and document-changed
+; We probably only need selection-did-change and document-changed
 (register-hook! 'selection-did-change
   (lambda (view-id)
     (refresh-presence)))
