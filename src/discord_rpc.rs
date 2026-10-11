@@ -62,7 +62,20 @@ impl DiscordRPC {
         let mut pending_cmd = None;
         loop {
             let name = Self::get_socket_name();
-            match ListenerOptions::new().name(name.clone()).create_sync() {
+
+            let listener = ListenerOptions::new()
+                .name(name.clone())
+                .create_sync()
+                .or_else(|_| {
+                    if LocalSocketStream::connect(name.clone()).is_err() {
+                        Self::cleanup_stale_socket();
+                        ListenerOptions::new().name(name.clone()).create_sync()
+                    } else {
+                        Err(std::io::Error::from(std::io::ErrorKind::AddrInUse))
+                    }
+                });
+
+            match listener {
                 Ok(listener) => {
                     if let Some(cmd) = pending_cmd.take() {
                         let _ = main_tx.send(cmd);
@@ -235,6 +248,13 @@ impl DiscordRPC {
                 .to_string()
                 .to_fs_name::<GenericFilePath>()
                 .unwrap()
+        }
+    }
+
+    fn cleanup_stale_socket() {
+        if !GenericNamespaced::is_supported() {
+            let path = std::env::temp_dir().join(SOCKET_BASE_NAME);
+            let _ = std::fs::remove_file(path);
         }
     }
 }
