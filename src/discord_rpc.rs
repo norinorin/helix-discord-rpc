@@ -59,11 +59,19 @@ impl DiscordRPC {
     }
 
     fn background_loop(rx: Receiver<RpcCommand>, main_tx: Sender<RpcCommand>) {
+        let mut pending_cmd = None;
         loop {
             let name = Self::get_socket_name();
             match ListenerOptions::new().name(name.clone()).create_sync() {
-                Ok(listener) => Self::run_primary(listener, &rx, &main_tx),
-                Err(_) => Self::run_replica(name, &rx, &main_tx),
+                Ok(listener) => {
+                    if let Some(cmd) = pending_cmd.take() {
+                        let _ = main_tx.send(cmd);
+                    }
+                    Self::run_primary(listener, &rx, &main_tx);
+                }
+                Err(_) => {
+                    pending_cmd = Self::run_replica(name, &rx, pending_cmd);
+                }
             }
         }
     }
@@ -115,14 +123,17 @@ impl DiscordRPC {
         }
     }
 
-    fn run_replica(name: Name<'_>, rx: &Receiver<RpcCommand>, main_tx: &Sender<RpcCommand>) {
+    fn run_replica(
+        name: Name<'_>,
+        rx: &Receiver<RpcCommand>,
+        mut last_cmd: Option<RpcCommand>,
+    ) -> Option<RpcCommand> {
         let Ok(mut stream) = LocalSocketStream::connect(name) else {
             thread::sleep(Duration::from_millis(200));
-            return;
+            return last_cmd;
         };
 
         let _ = stream.set_nonblocking(true);
-        let mut last_cmd = Option::<RpcCommand>::None;
         let mut buf = [0u8; 1];
 
         loop {
@@ -152,9 +163,7 @@ impl DiscordRPC {
             }
         }
 
-        if let Some(cmd) = last_cmd {
-            let _ = main_tx.send(cmd);
-        }
+        last_cmd
     }
 
     fn spawn_connection_acceptor(listener: LocalSocketListener, main_tx: Sender<RpcCommand>) {
