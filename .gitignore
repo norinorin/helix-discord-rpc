@@ -1,2 +1,3 @@
 .steel-env/
 target/
+.direnv/
