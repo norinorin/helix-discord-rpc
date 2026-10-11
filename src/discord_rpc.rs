@@ -116,32 +116,44 @@ impl DiscordRPC {
     }
 
     fn run_replica(name: Name<'_>, rx: &Receiver<RpcCommand>, main_tx: &Sender<RpcCommand>) {
+        let Ok(mut stream) = LocalSocketStream::connect(name) else {
+            thread::sleep(Duration::from_millis(200));
+            return;
+        };
+
+        let _ = stream.set_nonblocking(true);
         let mut last_cmd = Option::<RpcCommand>::None;
+        let mut buf = [0u8; 1];
 
-        if let Ok(mut stream) = LocalSocketStream::connect(name) {
-            while let Ok(cmd) = rx.recv() {
-                last_cmd = Some(cmd.clone());
+        loop {
+            match stream.read(&mut buf) {
+                Ok(0) => break, // eof
+                Ok(_) => {}
+                Err(e) if e.kind() == std::io::ErrorKind::WouldBlock => {}
+                Err(_) => break,
+            }
 
-                let bytes = match rkyv::to_bytes::<Error>(&cmd) {
-                    Ok(b) => b,
-                    Err(_) => continue,
-                };
+            match rx.recv_timeout(Duration::from_millis(200)) {
+                Ok(cmd) => {
+                    last_cmd = Some(cmd.clone());
 
-                let len_bytes = (bytes.len() as u32).to_le_bytes();
-                if stream.write_all(&len_bytes).is_err() || stream.write_all(&bytes).is_err() {
-                    break;
+                    let bytes = match rkyv::to_bytes::<Error>(&cmd) {
+                        Ok(b) => b,
+                        Err(_) => continue,
+                    };
+
+                    let len_bytes = (bytes.len() as u32).to_le_bytes();
+                    if stream.write_all(&len_bytes).is_err() || stream.write_all(&bytes).is_err() {
+                        break;
+                    }
                 }
+                Err(mpsc::RecvTimeoutError::Timeout) => continue,
+                Err(mpsc::RecvTimeoutError::Disconnected) => break,
             }
+        }
 
-            if let Some(cmd) = last_cmd {
-                let _ = main_tx.send(cmd);
-            }
-        } else {
-            if !GenericNamespaced::is_supported() {
-                let path = std::env::temp_dir().join(SOCKET_BASE_NAME);
-                let _ = std::fs::remove_file(path);
-            }
-            thread::sleep(Duration::from_millis(100));
+        if let Some(cmd) = last_cmd {
+            let _ = main_tx.send(cmd);
         }
     }
 
