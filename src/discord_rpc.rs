@@ -18,6 +18,7 @@ use crate::assets::{HELIX_ICON_URL, IDLE_ICON_URL, get_asset_url};
 const SOCKET_BASE_NAME: &str = "helix-discord-rpc.sock";
 const DISCORD_APP_ID: &str = "1491839617421414581";
 const MAX_PAYLOAD_SIZE: usize = 64 * 1024;
+const MIN_UPDATE_INTERVAL: Duration = Duration::from_secs(3);
 
 #[derive(Archive, Serialize, Deserialize, Debug, Clone)]
 pub enum RpcCommand {
@@ -75,6 +76,7 @@ impl DiscordRPC {
         let mut ipc_client = DiscordIpcClient::new(DISCORD_APP_ID).unwrap();
         let mut is_connected = false;
         let mut last_connect_attempt = std::time::Instant::now() - Duration::from_secs(30);
+        let mut last_update = std::time::Instant::now() - MIN_UPDATE_INTERVAL;
 
         Self::spawn_connection_acceptor(listener, main_tx.clone());
 
@@ -90,7 +92,12 @@ impl DiscordRPC {
             }
 
             if is_connected {
-                is_connected = match cmd {
+                let elapsed = last_update.elapsed();
+                if elapsed < MIN_UPDATE_INTERVAL {
+                    thread::sleep(MIN_UPDATE_INTERVAL - elapsed);
+                }
+
+                let success = match cmd {
                     RpcCommand::SetActivity {
                         path,
                         details,
@@ -98,7 +105,12 @@ impl DiscordRPC {
                     } => Self::handle_set_activity(&mut ipc_client, path, details, state),
                     RpcCommand::SetIdle => Self::handle_set_idle(&mut ipc_client),
                 };
-                thread::sleep(Duration::from_secs(3));
+
+                if success {
+                    last_update = std::time::Instant::now();
+                } else {
+                    is_connected = false;
+                }
             }
         }
     }
