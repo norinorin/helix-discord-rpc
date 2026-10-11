@@ -17,6 +17,7 @@ use crate::assets::{HELIX_ICON_URL, IDLE_ICON_URL, get_asset_url};
 
 const SOCKET_BASE_NAME: &str = "helix-discord-rpc.sock";
 const DISCORD_APP_ID: &str = "1491839617421414581";
+const MAX_PAYLOAD_SIZE: usize = 64 * 1024;
 
 #[derive(Archive, Serialize, Deserialize, Debug, Clone)]
 pub enum RpcCommand {
@@ -144,6 +145,10 @@ impl DiscordRPC {
                         }
 
                         let len = u32::from_le_bytes(len_buf) as usize;
+                        if len == 0 || len > MAX_PAYLOAD_SIZE {
+                            break;
+                        }
+
                         let mut payload = vec![0u8; len];
                         if stream.read_exact(&mut payload).is_err() {
                             break;
