@@ -1,0 +1,38 @@
+name: Sync VSCord Assets
+
+on:
+  schedule:
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Fetch upstream vscord assets
+        run: |
+          git clone --depth 1 --filter=blob:none --sparse https://github.com/leonardssh/vscord.git temp_vscord
+          cd temp_vscord
+          git sparse-checkout set assets/icons src/data
+          cd ..
+          cp temp_vscord/src/data/languages.json assets/vscord-languages.json
+          mkdir -p assets/icons
+          cp -r temp_vscord/assets/icons/* assets/icons/
+          rm -rf temp_vscord
+
+      - name: Create Pull Request on changes
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: sync language mappings and icons from vscord upstream"
+          title: "chore: sync upstream vscord assets"
+          body: "Automated PR to update `vscord-languages.json` and `assets/icons/` from [leonardssh/vscord](https://github.com/leonardssh/vscord)."
+          branch: "sync-vscord-assets"
+          delete-branch: true
