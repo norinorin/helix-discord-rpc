@@ -28,6 +28,7 @@ pub enum RpcCommand {
         state: String,
     },
     SetIdle,
+    ClearActivity,
 }
 
 pub struct DiscordRPC {
@@ -56,6 +57,10 @@ impl DiscordRPC {
 
     pub fn set_idle(&mut self) {
         let _ = self.tx.send(RpcCommand::SetIdle);
+    }
+
+    pub fn clear_activity(&mut self) {
+        let _ = self.tx.send(RpcCommand::ClearActivity);
     }
 
     fn background_loop(rx: Receiver<RpcCommand>, main_tx: Sender<RpcCommand>) {
@@ -125,6 +130,7 @@ impl DiscordRPC {
                         state,
                     } => Self::handle_set_activity(&mut ipc_client, path, details, state),
                     RpcCommand::SetIdle => Self::handle_set_idle(&mut ipc_client),
+                    RpcCommand::ClearActivity => Self::handle_clear_activity(&mut ipc_client),
                 };
 
                 if success {
@@ -236,6 +242,10 @@ impl DiscordRPC {
     fn handle_set_idle(ipc_client: &mut DiscordIpcClient) -> bool {
         let activity = Activity::new().assets(Assets::new().small_image(IDLE_ICON_URL));
         ipc_client.set_activity(activity).is_ok()
+    }
+
+    fn handle_clear_activity(ipc_client: &mut DiscordIpcClient) -> bool {
+        ipc_client.clear_activity().is_ok()
     }
 
     fn get_socket_name<'a>() -> Name<'a> {

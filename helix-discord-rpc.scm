@@ -8,7 +8,8 @@
   (only-in
     DiscordRPC::new
     DiscordRPC::set_activity
-    DiscordRPC::set_idle))
+    DiscordRPC::set_idle
+    DiscordRPC::clear_activity))
 
 ; CONFIGURATION
 ; TODO: implement idle and dynamic asset base url
@@ -63,6 +64,30 @@
 
 (provide discord-rpc-register-details-fn)
 
+;;@docs
+; Connects the server to Discord's RPC
+(define (discord-rpc-connect)
+  (if
+    is-connected
+    "RPC already connected"
+    (begin
+      (set! is-connected #true)
+      "RPC connected")))
+
+(provide discord-rpc-connect)
+
+;;@docs
+; Disconnects and clears presence from Discord
+(define (discord-rpc-disconnect)
+  (if is-connected
+    (begin
+      (set! is-connected #false)
+      (DiscordRPC::clear_activity server)
+      "RPC disconnected")
+    "RPC not connected"))
+
+(provide discord-rpc-disconnect)
+
 ; INTERNALS
 (define server (DiscordRPC::new))
 (define is-connected #false) ; a bit misleading, this var means whether or not we should send events
@@ -90,15 +115,3 @@
 (register-hook! 'document-opened
   (lambda (doc-id)
     (refresh-presence)))
-
-;;@docs
-; Connects the server to Discord's RPC
-(define (discord-rpc-connect)
-  (if
-    is-connected
-    "RPC already connected"
-    (begin
-      (set! is-connected #true)
-      "RPC connected")))
-
-(provide discord-rpc-connect)
