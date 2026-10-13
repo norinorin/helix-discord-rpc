@@ -92,13 +92,13 @@
     (refresh-presence)))
 
 ;;@docs
-; Connects the server to discord's websocket
+; Connects the server to Discord's RPC
 (define (discord-rpc-connect)
   (if
     is-connected
-    "Websocket already connected"
+    "RPC already connected"
     (begin
       (set! is-connected #true)
-      "Websocket connected")))
+      "RPC connected")))
 
 (provide discord-rpc-connect)
