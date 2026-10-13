@@ -134,7 +134,7 @@ in {
 
 <details>
 
-<summary>Black/Whitelisting</summary>
+<summary>Black/whitelisting</summary>
 
 ```scm
 ; init.scm
