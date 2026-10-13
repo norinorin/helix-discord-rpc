@@ -13,7 +13,7 @@
   (let* ([view (editor-focus)]
          [doc-id (and view (editor->doc-id view))]
          [path (and doc-id (editor-document->path doc-id))])
-    (if path path "")))
+    (if path path "[scratch]")))
 
 (define (discord-rpc-current-workspace-path)
   (let ([ws (helix-find-workspace)])
