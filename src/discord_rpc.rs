@@ -1,16 +1,19 @@
 use discord_rich_presence::{
     DiscordIpc, DiscordIpcClient,
-    activity::{self, Activity, Assets},
+    activity::{self, Activity, Assets, Timestamps},
 };
 use interprocess::local_socket::{
     GenericFilePath, GenericNamespaced, ListenerOptions, Name, ToFsName, prelude::*,
 };
 use rkyv::{Archive, Deserialize, Serialize, rancor::Error};
-use std::io::{Read, Write};
 use std::path::Path;
 use std::sync::mpsc::{self, Receiver, Sender};
 use std::thread;
 use std::time::Duration;
+use std::{
+    io::{Read, Write},
+    time::{SystemTime, UNIX_EPOCH},
+};
 use steel::rvals::Custom;
 
 use crate::assets::{HELIX_ICON_URL, IDLE_ICON_URL, get_asset_url};
@@ -24,11 +27,13 @@ const MIN_UPDATE_INTERVAL: Duration = Duration::from_secs(3);
 pub enum RpcCommand {
     SetActivity {
         path: String,
+        workspace: String,
         details: String,
         state: String,
     },
     SetIdle,
     ClearActivity,
+    SetResetMode(String),
 }
 
 pub struct DiscordRPC {
@@ -47,9 +52,16 @@ impl DiscordRPC {
         DiscordRPC { tx }
     }
 
-    pub fn set_activity(&mut self, path: String, details: String, state: String) {
+    pub fn set_activity(
+        &mut self,
+        path: String,
+        workspace: String,
+        details: String,
+        state: String,
+    ) {
         let _ = self.tx.send(RpcCommand::SetActivity {
             path,
+            workspace,
             details,
             state,
         });
@@ -57,6 +69,10 @@ impl DiscordRPC {
 
     pub fn set_idle(&mut self) {
         let _ = self.tx.send(RpcCommand::SetIdle);
+    }
+
+    pub fn set_reset_mode(&mut self, mode: String) {
+        let _ = self.tx.send(RpcCommand::SetResetMode(mode));
     }
 
     pub fn clear_activity(&mut self) {
@@ -104,11 +120,27 @@ impl DiscordRPC {
         let mut last_connect_attempt = std::time::Instant::now() - Duration::from_secs(30);
         let mut last_update = std::time::Instant::now() - MIN_UPDATE_INTERVAL;
 
+        let session_start = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .map(|d| d.as_secs() as i64)
+            .unwrap_or(0);
+        let mut current_start = session_start;
+        let mut reset_mode = String::from("state");
+        let mut prev_path = String::new();
+        let mut prev_workspace = String::new();
+        let mut prev_details = String::new();
+        let mut prev_state = String::new();
+
         Self::spawn_connection_acceptor(listener, main_tx.clone());
 
         while let Ok(mut cmd) = rx.recv() {
             while let Ok(next_cmd) = rx.try_recv() {
                 cmd = next_cmd;
+            }
+
+            if let RpcCommand::SetResetMode(mode) = cmd {
+                reset_mode = mode;
+                continue;
             }
 
             if !is_connected && last_connect_attempt.elapsed() >= Duration::from_secs(30) {
@@ -123,14 +155,56 @@ impl DiscordRPC {
                     thread::sleep(MIN_UPDATE_INTERVAL - elapsed);
                 }
 
+                if let RpcCommand::SetActivity {
+                    ref path,
+                    ref workspace,
+                    ref details,
+                    ref state,
+                } = cmd
+                {
+                    let now = SystemTime::now()
+                        .duration_since(UNIX_EPOCH)
+                        .map(|d| d.as_secs() as i64)
+                        .unwrap_or(0);
+
+                    let should_reset = match reset_mode.as_str() {
+                        "file" => path != &prev_path,
+                        "workspace" => workspace != &prev_workspace,
+                        "never" => false,
+                        _ => {
+                            path != &prev_path
+                                || workspace != &prev_workspace
+                                || details != &prev_details
+                                || state != &prev_state
+                        }
+                    };
+
+                    if should_reset {
+                        current_start = now;
+                    }
+
+                    prev_path = path.clone();
+                    prev_workspace = workspace.clone();
+                    prev_details = details.clone();
+                    prev_state = state.clone();
+                }
+
                 let success = match cmd {
                     RpcCommand::SetActivity {
                         path,
+                        workspace: _,
                         details,
                         state,
-                    } => Self::handle_set_activity(&mut ipc_client, path, details, state),
+                    } => Self::handle_set_activity(
+                        &mut ipc_client,
+                        path,
+                        details,
+                        state,
+                        current_start,
+                    ),
                     RpcCommand::SetIdle => Self::handle_set_idle(&mut ipc_client),
                     RpcCommand::ClearActivity => Self::handle_clear_activity(&mut ipc_client),
+                    _ => true,
                 };
 
                 if success {
@@ -220,6 +294,7 @@ impl DiscordRPC {
         path: String,
         details: String,
         state: String,
+        start_timestamp: i64,
     ) -> bool {
         let filename = Path::new(&path)
             .file_name()
@@ -229,6 +304,7 @@ impl DiscordRPC {
         let activity = activity::Activity::new()
             .state(&state)
             .details(&details)
+            .timestamps(Timestamps::new().start(start_timestamp))
             .assets(
                 Assets::new()
                     .large_image(&asset_url)

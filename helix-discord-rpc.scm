@@ -9,7 +9,8 @@
     DiscordRPC::new
     DiscordRPC::set_activity
     DiscordRPC::set_idle
-    DiscordRPC::clear_activity))
+    DiscordRPC::clear_activity
+    DiscordRPC::set_reset_mode))
 
 ; CONFIGURATION
 ; TODO: implement idle and dynamic asset base url
@@ -88,6 +89,13 @@
 
 (provide discord-rpc-disconnect)
 
+;;@docs
+; Sets the timestamp reset strategy: "state", "file", "workspace", or "never"
+(define (discord-rpc-set-reset-mode mode)
+  (DiscordRPC::set_reset_mode server mode))
+
+(provide discord-rpc-set-reset-mode)
+
 ; INTERNALS
 (define server (DiscordRPC::new))
 (define is-connected #false) ; a bit misleading, this var means whether or not we should send events
@@ -97,6 +105,7 @@
     (DiscordRPC::set_activity
       server
       (discord-rpc-current-file-path)
+      (discord-rpc-current-workspace-path)
       (details-fn)
       (state-fn))))
 
