@@ -42,7 +42,6 @@
             rust-analyzer
             clippy
             steel
-            (python3.withPackages (ps: with ps; [exrex]))
           ];
 
           shellHook = ''
