@@ -74,15 +74,11 @@ in {
 
 <details>
 
-<summary>Connecting automatically and reset elapsed time on file change</summary>
+<summary>Connecting automatically</summary>
 
 ```scm
 ; init.scm
 (require "plugins/helix-discord-rpc/helix-discord-rpc.scm")
-
-;; Options: "state" | "file" | "workspace" | "never"
-;; Default: "state" -> elapsed time resets on any state change (cursor movement, line change, etc.)
-(discord-rpc-set-reset-mode "file") ;; elapsed time resets on file change
 
 (discord-rpc-connect)
 ```
