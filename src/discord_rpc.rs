@@ -212,18 +212,18 @@ impl DiscordRPC {
 
                 if let Some((&pid, act)) = most_recent {
                     let instance_switched = current_active_pid != Some(pid);
-                    let should_reset = instance_switched
-                        || match reset_mode.as_str() {
-                            "file" => act.path != prev_path,
-                            "workspace" => act.workspace != prev_workspace,
-                            "never" => false,
-                            _ => {
-                                act.path != prev_path
-                                    || act.workspace != prev_workspace
-                                    || act.details != prev_details
-                                    || act.state != prev_state
-                            }
-                        };
+                    let should_reset = match reset_mode.as_str() {
+                        "file" => act.path != prev_path,
+                        "workspace" => act.workspace != prev_workspace,
+                        "never" => false,
+                        _ => {
+                            instance_switched
+                                || act.path != prev_path
+                                || act.workspace != prev_workspace
+                                || act.details != prev_details
+                                || act.state != prev_state
+                        }
+                    };
 
                     if should_reset {
                         current_start = SystemTime::now()
