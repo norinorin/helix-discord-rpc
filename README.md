@@ -78,7 +78,7 @@ in {
 
 ```scm
 ; init.scm
-(require "plugins/helix-discord-rpc/helix-discord-rpc.scm")
+(require "helix-discord-rpc/helix-discord-rpc.scm")
 
 (discord-rpc-connect)
 ```
@@ -93,8 +93,8 @@ in {
 ; init.scm
 (require-builtin steel/strings)
 
-(require "plugins/helix-discord-rpc/helix-discord-rpc.scm")
-(require "plugins/helix-discord-rpc/utils.scm")
+(require "helix-discord-rpc/helix-discord-rpc.scm")
+(require "helix-discord-rpc/utils.scm")
 
 (discord-rpc-register-details-fn
   (lambda ()
@@ -134,8 +134,8 @@ in {
 
 ```scm
 ; init.scm
-(require "plugins/helix-discord-rpc/helix-discord-rpc.scm")
-(require "plugins/helix-discord-rpc/utils.scm")
+(require "helix-discord-rpc/helix-discord-rpc.scm")
+(require "helix-discord-rpc/utils.scm")
 
 ; Each `discord-rpc-register-should-display-fn` call overrides
 ; the previous one, so only use this function once!
