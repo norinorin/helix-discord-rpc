@@ -32,7 +32,7 @@ forge pkg install --git https://github.com/norinorin/helix-discord-rpc.git
 2. `require` it in your `init.scm`:
 
 ```scm
-(require "helix-discord-rpc/helix-discord-rpc.scm")
+(require "helix-discord-rpc/init.scm")
 ```
 
 </details>
@@ -57,7 +57,7 @@ in {
     "${helix-discord-rpc}/share/helix-discord-rpc";
 
   xdg.configFile."helix/init.scm".text = ''
-    (require "plugins/helix-discord-rpc/helix-discord-rpc.scm")
+    (require "plugins/helix-discord-rpc/init.scm")
   '';
 
   home.file = {
@@ -78,7 +78,7 @@ in {
 
 ```scm
 ; init.scm
-(require "helix-discord-rpc/helix-discord-rpc.scm")
+(require "helix-discord-rpc/init.scm")
 
 (discord-rpc-connect)
 ```
@@ -93,7 +93,7 @@ in {
 ; init.scm
 (require-builtin steel/strings)
 
-(require "helix-discord-rpc/helix-discord-rpc.scm")
+(require "helix-discord-rpc/init.scm")
 (require "helix-discord-rpc/utils.scm")
 
 (discord-rpc-register-details-fn
@@ -134,7 +134,7 @@ in {
 
 ```scm
 ; init.scm
-(require "helix-discord-rpc/helix-discord-rpc.scm")
+(require "helix-discord-rpc/init.scm")
 (require "helix-discord-rpc/utils.scm")
 
 ; Each `discord-rpc-register-should-display-fn` call overrides
