@@ -32,7 +32,7 @@ forge pkg install --git https://github.com/norinorin/helix-discord-rpc.git
 2. `require` it in your `init.scm`:
 
 ```scm
-(require (prefix-in helix-discord-rpc. "helix-discord-rpc/helix-discord-rpc.scm"))
+(require "helix-discord-rpc/helix-discord-rpc.scm")
 ```
 
 </details>
