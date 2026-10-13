@@ -141,7 +141,8 @@ in {
 (require "plugins/helix-discord-rpc/helix-discord-rpc.scm")
 (require "plugins/helix-discord-rpc/utils.scm")
 
-; Each `discord-rpc-register-should-display-fn` call overrides the previous one, so only use this function once!
+; Each `discord-rpc-register-should-display-fn` call overrides
+; the previous one, so only use this function once!
 ; To apply multiple rules, compose them in a single lambda.
 
 ; 1. Exact-match blacklist
