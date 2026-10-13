@@ -1,3 +1,6 @@
 .steel-env/
 target/
 .direnv/
+
+# For some reason helix scheme language server logs land here
+*.log
