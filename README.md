@@ -132,6 +132,44 @@ in {
 
 </details>
 
+<details>
+
+<summary>Black/Whitelisting</summary>
+
+```scm
+; init.scm
+(require "plugins/helix-discord-rpc/helix-discord-rpc.scm")
+(require "plugins/helix-discord-rpc/utils.scm")
+
+; Each `discord-rpc-register-should-display-fn` call overrides the previous one, so only use this function once!
+; To apply multiple rules, compose them in a single lambda.
+
+; 1. Exact-match blacklist
+(define ignored-workspaces '("secret-project" "confidential"))
+
+(discord-rpc-register-should-display-fn
+  (lambda ()
+    (let ([folder (discord-rpc-basename (discord-rpc-current-workspace-path))])
+      (not (member folder ignored-workspaces)))))
+
+; 2. Substring-match blacklist
+(discord-rpc-register-should-display-fn
+  (lambda ()
+    (let ([path (discord-rpc-current-workspace-path)])
+      (not (string-contains? path "/private/")))))
+
+; 3. Language whitelist
+(discord-rpc-register-should-display-fn
+  (lambda ()
+    (let ([lang (discord-rpc-current-language)])
+      (or (string=? lang "rust")
+          (string=? lang "scheme")))))
+
+(discord-rpc-connect)
+```
+
+</details>
+
 ## Features
 
 - [x] Activity update

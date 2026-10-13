@@ -32,8 +32,10 @@
   (let* ([workspace (discord-rpc-current-workspace-path)]
          [folder (discord-rpc-basename workspace)])
     (string-append "Workspace " folder)))
+(define (default-should-display-fn) #true)
 (define state-fn default-state-fn)
 (define details-fn default-details-fn)
+(define should-display-fn default-should-display-fn)
 
 ;;@docs
 ; Sets the idle timeout
@@ -64,6 +66,13 @@
   (set! details-fn function))
 
 (provide discord-rpc-register-details-fn)
+
+;;@docs
+; Registers a predicate function that determines whether Rich Presence should update/display
+(define (discord-rpc-register-should-display-fn function)
+  (set! should-display-fn function))
+
+(provide discord-rpc-register-should-display-fn)
 
 ;;@docs
 ; Connects the server to Discord's RPC
@@ -102,12 +111,15 @@
 
 (define (refresh-presence)
   (when is-connected
-    (DiscordRPC::set_activity
-      server
-      (discord-rpc-current-file-path)
-      (discord-rpc-current-workspace-path)
-      (details-fn)
-      (state-fn))))
+    (if
+      (should-display-fn)
+      (DiscordRPC::set_activity
+        server
+        (discord-rpc-current-file-path)
+        (discord-rpc-current-workspace-path)
+        (details-fn)
+        (state-fn))
+      (DiscordRPC::clear_activity server))))
 
 ; We probably only need selection-did-change and document-changed
 ; Maybe throttle this function?
