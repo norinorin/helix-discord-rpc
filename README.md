@@ -13,7 +13,7 @@ Discord RPC support for Helix via Steel.
 
 ## Requirements
 
-- [Helix plugin fork](https://github.com/mattwparas/helix) 
+- [Helix plugin fork](https://github.com/mattwparas/helix/tree/steel-event-system) 
 - [Steel](https://github.com/mattwparas/steel)
 - Alternatively, use the Nix Home Manager module via a flake
 
