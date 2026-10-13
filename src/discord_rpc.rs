@@ -180,7 +180,7 @@ impl DiscordRPC {
             .map(|d| d.as_secs() as i64)
             .unwrap_or(0);
         let mut current_start = session_start;
-        let mut reset_mode = String::from("state");
+        let mut reset_mode = String::from("workspace");
         let mut prev_path = String::new();
         let mut prev_workspace = String::new();
         let mut prev_details = String::new();
