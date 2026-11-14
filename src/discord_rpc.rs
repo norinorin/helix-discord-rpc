@@ -3,7 +3,7 @@ use discord_rich_presence::{
     activity::{self, Activity, Assets, Timestamps},
 };
 use interprocess::local_socket::{
-    GenericFilePath, GenericNamespaced, ListenerOptions, Name, ToFsName, prelude::*,
+    GenericFilePath, ListenerOptions, Name, ToFsName, prelude::*,
 };
 use rkyv::{Archive, Deserialize, Serialize, rancor::Error};
 use std::sync::mpsc::{self, Receiver, Sender};
@@ -397,22 +397,16 @@ impl DiscordRPC {
     }
 
     fn get_socket_name<'a>() -> Name<'a> {
-        if GenericNamespaced::is_supported() {
-            SOCKET_BASE_NAME.to_ns_name::<GenericNamespaced>().unwrap()
-        } else {
-            std::env::temp_dir()
-                .join(SOCKET_BASE_NAME)
-                .to_string_lossy()
-                .to_string()
-                .to_fs_name::<GenericFilePath>()
-                .unwrap()
-        }
+        std::env::temp_dir()
+            .join(SOCKET_BASE_NAME)
+            .to_string_lossy()
+            .to_string()
+            .to_fs_name::<GenericFilePath>()
+            .unwrap()
     }
 
     fn cleanup_stale_socket() {
-        if !GenericNamespaced::is_supported() {
-            let path = std::env::temp_dir().join(SOCKET_BASE_NAME);
-            let _ = std::fs::remove_file(path);
-        }
+        let path = std::env::temp_dir().join(SOCKET_BASE_NAME);
+        let _ = std::fs::remove_file(path);
     }
 }
