@@ -130,6 +130,23 @@ in {
 
 <details>
 
+<summary>Hide status after inactivity</summary>
+
+```scm
+; init.scm
+(require "helix-discord-rpc/init.scm")
+
+; Clear the Discord presence after 10 minutes of inactivity (the default).
+; Pass 0 to disable.
+(discord-rpc-set-idle-timeout (* 10 60))
+
+(discord-rpc-connect)
+```
+
+</details>
+
+<details>
+
 <summary>Black/whitelisting</summary>
 
 ```scm
@@ -174,7 +191,7 @@ in {
   - [x] On file change
 - [x] IPC for multiple instances of Helix
 - [x] Language icons
-- [ ] Idle status (to be implemented in lib)
+- [x] Idle timeout (10min by default)
 - [x] Cursor position
 - [ ] Git status (to be implemented in steel?)
 - [ ] LSP workspace/file diagnostics (to be implemented in steel)

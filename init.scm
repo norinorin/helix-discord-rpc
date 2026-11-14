@@ -10,11 +10,12 @@
     DiscordRPC::set_activity
     DiscordRPC::set_idle
     DiscordRPC::clear_activity
-    DiscordRPC::set_reset_mode))
+    DiscordRPC::set_reset_mode
+    DiscordRPC::set_idle_timeout))
 
 ; CONFIGURATION
-; TODO: implement idle and dynamic asset base url
-(define idle_timeout 0) ; 0 = disabled
+; TODO: implement dynamic asset base url
+(define idle_timeout (* 10 60)) ; seconds of inactivity before presence is cleared; 0 = disabled
 (define base_asset_url "https://raw.githubusercontent.com/norinorin/helix-discord-rpc/refs/heads/main/assets/icons/") ; expects icons to be in png
 (define (default-state-fn)
   (let* ([path (discord-rpc-current-file-path)]
@@ -38,10 +39,11 @@
 (define should-display-fn default-should-display-fn)
 
 ;;@docs
-; Sets the idle timeout
+; Sets the idle timeout in seconds: presence is cleared after this much
+; inactivity. 0 disables the timeout.
 (define (discord-rpc-set-idle-timeout timeout)
   (set! idle_timeout timeout)
-  "Not implemented!")
+  (DiscordRPC::set_idle_timeout server idle_timeout))
 
 (provide discord-rpc-set-idle-timeout)
 
@@ -107,6 +109,7 @@
 
 ; INTERNALS
 (define server (DiscordRPC::new))
+(DiscordRPC::set_idle_timeout server idle_timeout)
 (define is-connected #false) ; a bit misleading, this var means whether or not we should send events
 
 (define (refresh-presence)
