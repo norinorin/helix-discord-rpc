@@ -22,6 +22,8 @@ const SOCKET_BASE_NAME: &str = "helix-discord-rpc.sock";
 const DISCORD_APP_ID: &str = "1491839617421414581";
 const MAX_PAYLOAD_SIZE: usize = 64 * 1024;
 const MIN_UPDATE_INTERVAL: Duration = Duration::from_secs(3);
+const DEFAULT_IDLE_TIMEOUT_SECS: u64 = 10 * 60;
+const IDLE_CHECK_INTERVAL: Duration = Duration::from_secs(1);
 
 #[derive(Archive, Serialize, Deserialize, Debug, Clone)]
 pub enum RpcCommand {
@@ -39,6 +41,7 @@ pub enum RpcCommand {
         pid: u32,
     },
     SetResetMode(String),
+    SetIdleTimeout(u64),
 }
 
 #[derive(Clone, Debug)]
@@ -98,6 +101,12 @@ impl DiscordRPC {
         let _ = self.tx.send(RpcCommand::SetResetMode(mode));
     }
 
+    pub fn set_idle_timeout(&mut self, seconds: i64) {
+        let _ = self
+            .tx
+            .send(RpcCommand::SetIdleTimeout(seconds.max(0) as u64));
+    }
+
     fn background_loop(rx: Receiver<RpcCommand>, main_tx: Sender<RpcCommand>) {
         let mut last_cmd = None;
         loop {
@@ -132,11 +141,15 @@ impl DiscordRPC {
     fn update_instance_state(
         active_instances: &mut HashMap<u32, InstanceActivity>,
         reset_mode: &mut String,
+        idle_timeout: &mut Duration,
         cmd: RpcCommand,
     ) {
         match cmd {
             RpcCommand::SetResetMode(mode) => {
                 *reset_mode = mode;
+            }
+            RpcCommand::SetIdleTimeout(seconds) => {
+                *idle_timeout = Duration::from_secs(seconds);
             }
             RpcCommand::SetActivity {
                 pid,
@@ -181,6 +194,7 @@ impl DiscordRPC {
             .unwrap_or(0);
         let mut current_start = session_start;
         let mut reset_mode = String::from("workspace");
+        let mut idle_timeout = Duration::from_secs(DEFAULT_IDLE_TIMEOUT_SECS);
         let mut prev_path = String::new();
         let mut prev_workspace = String::new();
         let mut prev_details = String::new();
@@ -188,19 +202,56 @@ impl DiscordRPC {
 
         Self::spawn_connection_acceptor(listener, main_tx.clone());
 
-        while let Ok(cmd) = rx.recv() {
-            Self::update_instance_state(&mut active_instances, &mut reset_mode, cmd);
+        loop {
+            let timeout = if idle_timeout.is_zero() {
+                Duration::MAX
+            } else {
+                IDLE_CHECK_INTERVAL
+            };
+
+            let mut activity_changed = match rx.recv_timeout(timeout) {
+                Ok(cmd) => {
+                    Self::update_instance_state(
+                        &mut active_instances,
+                        &mut reset_mode,
+                        &mut idle_timeout,
+                        cmd,
+                    );
+                    true
+                }
+                Err(mpsc::RecvTimeoutError::Timeout) => false,
+                Err(mpsc::RecvTimeoutError::Disconnected) => break,
+            };
+
             while let Ok(next_cmd) = rx.try_recv() {
-                Self::update_instance_state(&mut active_instances, &mut reset_mode, next_cmd);
+                Self::update_instance_state(
+                    &mut active_instances,
+                    &mut reset_mode,
+                    &mut idle_timeout,
+                    next_cmd,
+                );
+                activity_changed = true;
+            }
+
+            if !idle_timeout.is_zero() {
+                let instance_count = active_instances.len();
+                active_instances.retain(|_, act| act.updated_at.elapsed() < idle_timeout);
+                let evicted = active_instances.len() != instance_count;
+                activity_changed |= evicted;
+                if evicted && active_instances.is_empty() {
+                    prev_path.clear();
+                    prev_workspace.clear();
+                }
             }
 
             if !is_connected && last_connect_attempt.elapsed() >= Duration::from_secs(30) {
                 ipc_client = DiscordIpcClient::new(DISCORD_APP_ID).unwrap();
                 is_connected = ipc_client.connect().is_ok();
+                activity_changed |= is_connected;
                 last_connect_attempt = std::time::Instant::now();
             }
 
-            if is_connected {
+            if is_connected && activity_changed {
                 let elapsed = last_update.elapsed();
                 if elapsed < MIN_UPDATE_INTERVAL {
                     thread::sleep(MIN_UPDATE_INTERVAL - elapsed);
